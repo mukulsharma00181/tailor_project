@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANOJ SHARMA TAILOR SHOP</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef3f8;
+    color: #222;
+}
+
+header, footer {
+    background: #173b57;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 750px;
+    margin: 25px auto;
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #0001;
+}
+
+h2 { color: #173b57; }
+
+label {
+    display: block;
+    margin: 12px 0 6px;
+}
+
+input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+}
+
+button {
+    background: #176b87;
+    color: white;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 5px 3px;
+}
+
+button:hover { background: #10475a; }
+
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.counter input {
+    width: 100px;
+    text-align: center;
+}
+
+.counter button {
+    min-width: 42px;
+    font-size: 18px;
+}
+
+.total {
+    font-size: 25px;
+    font-weight: bold;
+    color: #13834a;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 12px 0;
+}
+
+#qr {
+    display: block;
+    width: 220px;
+    max-width: 100%;
+    margin: 15px auto;
+}
+
+.certificate {
+    border: 6px double #173b57;
+    padding: 25px;
+    text-align: center;
+    line-height: 1.8;
+}
+
+@media print {
+    header, footer, .no-print {
+        display: none !important;
+    }
+
+    body { background: white; }
+    .container { margin: 0; max-width: 100%; }
+    .card { box-shadow: none; }
+}
+
+@media (max-width: 480px) {
+    .card { padding: 15px; }
+    .counter { gap: 6px; }
+    .container { padding: 10px; margin: 12px auto; }
+    header h1 { font-size: 22px; }
+    input { font-size: 16px; padding: 12px; }
+    button { padding: 12px 16px; font-size: 15px; }
+    .counter button { min-width: 48px; min-height: 46px; }
+    .counter input { width: 90px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>MANOJ SHARMA TAILOR SHOP</h1>
+    <p>Tailor Shop Management System</p>
+    <p class="no-print"><a href="/login/" style="color:#fff;">Owner Login</a></p>
+</header>
+
+<div class="container">
+
+    <!-- PRICE LIST -->
+    <section class="card">
+        <h2>1. Fixed Price List</h2>
+        <p>👔 Shirt Starting Price: ₹500</p>
+        <p>👖 Pant Starting Price: ₹700</p>
+        <small>+ / − बटन से कीमत ₹1 बढ़ा या घटा सकते हैं।</small>
+    </section>
+
+    <!-- CUSTOMER ORDER -->
+    <section class="card">
+        <h2>2. Customer Order</h2>
+
+        <label>Customer Name</label>
+        <input type="text" id="customer"
+               placeholder="Enter customer name">
+
+        <h3>👔 Shirt Price</h3>
+        <div class="counter no-print">
+            <button type="button"
+                    onclick="changePrice('shirtPrice',-1)">−</button>
+            <input type="number" id="shirtPrice"
+                   value="500" min="0" step="1"
+                   onchange="updateTotal()">
+            <button type="button"
+                    onclick="changePrice('shirtPrice',1)">+</button>
+        </div>
+
+        <label>Shirt Quantity</label>
+        <div class="counter no-print">
+            <button type="button"
+                    onclick="changeQty('shirtQty',-1)">−</button>
+            <input type="number" id="shirtQty"
+                   value="1" min="0" step="1"
+                   onchange="updateTotal()">
+            <button type="button"
+                    onclick="changeQty('shirtQty',1)">+</button>
+        </div>
+
+        <p>Shirt Quantity: <span id="shirtCount">1</span></p>
+        <p>Shirt Total: ₹<span id="shirtTotal">500</span></p>
+
+        <hr>
+
+        <h3>👖 Pant Price</h3>
+        <div class="counter no-print">
+            <button type="button"
+                    onclick="changePrice('pantPrice',-1)">−</button>
+            <input type="number" id="pantPrice"
+                   value="700" min="0" step="1"
+                   onchange="updateTotal()">
+            <button type="button"
+                    onclick="changePrice('pantPrice',1)">+</button>
+        </div>
+
+        <label>Pant Quantity</label>
+        <div class="counter no-print">
+            <button type="button"
+                    onclick="changeQty('pantQty',-1)">−</button>
+            <input type="number" id="pantQty"
+                   value="1" min="0" step="1"
+                   onchange="updateTotal()">
+            <button type="button"
+                    onclick="changeQty('pantQty',1)">+</button>
+        </div>
+
+        <p>Pant Quantity: <span id="pantCount">1</span></p>
+        <p>Pant Total: ₹<span id="pantTotal">700</span></p>
+
+        <hr>
+
+        <div class="summary-row">
+            <b>Grand Total:</b>
+            <span class="total">₹<span id="grandTotal">1200</span></span>
+        </div>
+
+        <p>Order Serial Number: <b id="orderNumber">500</b></p>
+
+        <button class="no-print" onclick="generateBill()">
+            Generate Bill
+        </button>
+
+        <div id="bill"></div>
+    </section>
+
+    <!-- UPI QR -->
+    <section class="card">
+        <h2>3. UPI Payment QR Code</h2>
+
+        <p>UPI ID: <b id="upiText"></b></p>
+        <p>Payment Amount: ₹<span id="qrAmount">1200</span></p>
+
+        <button class="no-print" onclick="generateQR()">
+            Generate QR Code
+        </button>
+
+        <div id="qrArea"></div>
+
+        <small>
+            QR Code बनाने के लिए इंटरनेट जरूरी है।
+            Payment की पुष्टि अपने UPI app में करें।
+        </small>
+    </section>
+
+    <!-- CERTIFICATE -->
+    <section class="card">
+        <button class="no-print" onclick="window.print()">
+            Print / Save PDF
+        </button>
+    </section>
+
+</div>
+
+<footer>
+    <p>MANOJ SHARMA TAILOR SHOP</p>
+    <p>Project by Mukul Sharma | Roll No. 63</p>
+    <p>Shobhit University</p>
+</footer>
+
+<script>
+const DEFAULT_SHIRT_PRICE = 500;
+const DEFAULT_PANT_PRICE = 700;
+
+// Your supplied UPI ID
+const UPI_ID = "mukulsharma0018@oksbi";
+
+let orderNumber = 500;
+
+document.getElementById("upiText").textContent = UPI_ID;
+
+function getNumber(id) {
+    const input = document.getElementById(id);
+    let value = Number(input.value);
+
+    if (!Number.isFinite(value) || value < 0) {
+        value = 0;
+    }
+
+    value = Math.floor(value);
+    input.value = value;
+    return value;
+}
+
+function changePrice(id, change) {
+    const input = document.getElementById(id);
+    let price = Number(input.value);
+
+    if (!Number.isFinite(price) || price < 0) {
+        price = 0;
+    }
+
+    input.value = Math.max(0, Math.floor(price) + change);
+    updateTotal();
+}
+
+function changeQty(id, change) {
+    const input = document.getElementById(id);
+    let qty = Number(input.value);
+
+    if (!Number.isFinite(qty) || qty < 0) {
+        qty = 0;
+    }
+
+    input.value = Math.max(0, Math.floor(qty) + change);
+    updateTotal();
+}
+
+function updateTotal() {
+    const shirtPrice = getNumber("shirtPrice");
+    const pantPrice = getNumber("pantPrice");
+    const shirtQty = getNumber("shirtQty");
+    const pantQty = getNumber("pantQty");
+
+    const shirtTotal = shirtPrice * shirtQty;
+    const pantTotal = pantPrice * pantQty;
+    const grandTotal = shirtTotal + pantTotal;
+
+    document.getElementById("shirtCount").textContent = shirtQty;
+    document.getElementById("pantCount").textContent = pantQty;
+
+    document.getElementById("shirtTotal").textContent = shirtTotal;
+    document.getElementById("pantTotal").textContent = pantTotal;
+    document.getElementById("grandTotal").textContent = grandTotal;
+    document.getElementById("qrAmount").textContent = grandTotal;
+
+    // Clear outdated bill and QR after an order change
+    document.getElementById("bill").innerHTML = "";
+    document.getElementById("qrArea").innerHTML = "";
+}
+
+function escapeHTML(value) {
+    return value.replace(/[&<>"']/g, function (char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
+
+function generateBill() {
+    const name = document.getElementById("customer").value.trim();
+
+    if (!name) {
+        alert("Please enter customer name.");
+        return;
+    }
+
+    const shirtPrice = getNumber("shirtPrice");
+    const pantPrice = getNumber("pantPrice");
+    const shirtQty = getNumber("shirtQty");
+    const pantQty = getNumber("pantQty");
+
+    if (shirtQty + pantQty === 0) {
+        alert("Please select at least one item.");
+        return;
+    }
+
+    const shirtTotal = shirtPrice * shirtQty;
+    const pantTotal = pantPrice * pantQty;
+    const grandTotal = shirtTotal + pantTotal;
+
+    document.getElementById("bill").innerHTML = `
+        <hr>
+        <div id="printBill">
+            <h3>MANOJ SHARMA TAILOR SHOP</h3>
+            <h3>Customer Bill</h3>
+            <p>Order Serial Number: ${orderNumber}</p>
+            <p>Customer: ${escapeHTML(name)}</p>
+            <p>Shirt: ${shirtQty} × ₹${shirtPrice} = ₹${shirtTotal}</p>
+            <p>Pant: ${pantQty} × ₹${pantPrice} = ₹${pantTotal}</p>
+            <hr>
+            <h3>Grand Total: ₹${grandTotal}</h3>
+        </div>
+        <button class="no-print" onclick="printBill()">
+            Print Bill
+        </button>
+    `;
+
+    document.getElementById("orderNumber").textContent = orderNumber;
+    orderNumber++;
+}
+
+function printBill() {
+    const billContent = document.getElementById("printBill");
+
+    if (!billContent) {
+        alert("Please generate the bill first.");
+        return;
+    }
+
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+        alert("Please allow pop-ups to print the bill.");
+        return;
+    }
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Customer Bill</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 25px;
+                }
+                h3 { color: #173b57; }
+            </style>
+        </head>
+        <body>${billContent.innerHTML}</body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+}
+
+function generateQR() {
+    const shirtPrice = getNumber("shirtPrice");
+    const pantPrice = getNumber("pantPrice");
+    const shirtQty = getNumber("shirtQty");
+    const pantQty = getNumber("pantQty");
+
+    const amount = shirtPrice * shirtQty + pantPrice * pantQty;
+
+    if (amount <= 0) {
+        alert("Please select at least one item.");
+        return;
+    }
+
+    const upiLink = "upi://pay?pa=" +
+        encodeURIComponent(UPI_ID) +
+        "&pn=" + encodeURIComponent("Manoj Sharma Tailor Shop") +
+        "&am=" + amount.toFixed(2) +
+        "&cu=INR";
+
+    const qrURL =
+        "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+        encodeURIComponent(upiLink);
+
+    document.getElementById("qrArea").innerHTML = `
+        <img id="qr" alt="UPI Payment QR Code">
+        <p style="text-align:center">
+            Payment Amount: ₹${amount}
+        </p>
+    `;
+
+    document.getElementById("qr").src = qrURL;
+}
+
+updateTotal();
+</script>
+
+</body>
+</html>

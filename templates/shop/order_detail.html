@@ -1,0 +1,59 @@
+{% extends "shop/base.html" %}
+{% block title %}Order #{{ object.order_no }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;">
+        <a class="btn btn-light" href="{% url 'order_list' %}">« Back</a>
+        <a class="btn" href="{% url 'order_update' object.pk %}">Edit</a>
+        <a class="btn btn-danger" href="{% url 'order_delete' object.pk %}">Delete</a>
+        <button type="button" onclick="window.print()">Print Bill</button>
+    </div>
+
+    <h2>MANOJ SHARMA TAILOR SHOP</h2>
+    <h3>Order #{{ object.order_no }}
+        <span class="badge badge-{{ object.status }}">{{ object.get_status_display }}</span></h3>
+
+    <p><b>Customer:</b> {{ object.customer_name }}<br>
+       <b>Mobile:</b> {{ object.mobile|default:"—" }}<br>
+       <b>Order date:</b> {{ object.created_at|date:"d M Y" }}<br>
+       <b>Delivery date:</b> {{ object.delivery_date|date:"d M Y"|default:"—" }}</p>
+
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Amount</th></tr></thead>
+        <tbody>
+            <tr><td>Shirt</td><td>{{ object.shirt_qty }}</td><td>₹{{ object.shirt_price }}</td><td>₹{{ object.shirt_total }}</td></tr>
+            <tr><td>Pant</td><td>{{ object.pant_qty }}</td><td>₹{{ object.pant_price }}</td><td>₹{{ object.pant_total }}</td></tr>
+            <tr><th colspan="3">Grand Total</th><th>₹{{ object.total }}</th></tr>
+            <tr><td colspan="3">Paid</td><td>₹{{ object.amount_paid }}</td></tr>
+            <tr><th colspan="3">Balance Due</th><th>₹{{ object.balance }}</th></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <h3>Measurements (inches)</h3>
+    <p>Chest: {{ object.chest|default:"—" }} &nbsp;|&nbsp; Length: {{ object.length|default:"—" }}
+       &nbsp;|&nbsp; Waist: {{ object.waist|default:"—" }} &nbsp;|&nbsp; Shoulder: {{ object.shoulder|default:"—" }}</p>
+
+    {% if object.notes %}<h3>Notes</h3><p>{{ object.notes|linebreaksbr }}</p>{% endif %}
+</div>
+{% if show_qr %}
+<div class="card" id="qr" style="text-align:center;">
+    <h2>Payment QR</h2>
+    {% if object.balance > 0 %}
+        <p>Amount to pay: <span class="total">₹{{ object.balance }}</span></p>
+        <a class="btn btn-block mobile-only no-print" href="{{ upi_link }}">📱 Pay with UPI app</a>
+        {% if qr_uri %}
+            <img src="{{ qr_uri }}" alt="UPI payment QR code" style="width:240px;max-width:100%;">
+            <p class="muted">Scan with any UPI app (PhonePe, Google Pay, Paytm, BHIM).<br>
+               Pay to: <b>{{ upi_id }}</b></p>
+            <p class="muted no-print">After the customer pays, open <b>Edit</b> and update “Amount paid so far”.</p>
+        {% else %}
+            <p class="errorlist">QR library is not installed. Run <code>pip install -r requirements.txt</code> and restart the server.</p>
+        {% endif %}
+    {% else %}
+        <p><b>✔ Fully paid.</b> Nothing is due on this order.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

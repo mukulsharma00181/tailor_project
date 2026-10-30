@@ -1,0 +1,70 @@
+{% extends "shop/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>{{ title }}</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="errorlist">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <h3>Customer</h3>
+        <div class="grid">
+            <div><label for="{{ form.customer_name.id_for_label }}">Customer name</label>{{ form.customer_name }}{{ form.customer_name.errors }}</div>
+            <div><label for="{{ form.mobile.id_for_label }}">Mobile</label>{{ form.mobile }}{{ form.mobile.errors }}</div>
+        </div>
+
+        <h3>Items</h3>
+        <div class="grid grid-sm">
+            <div><label for="{{ form.shirt_qty.id_for_label }}">👔 Shirt quantity</label>{{ form.shirt_qty }}{{ form.shirt_qty.errors }}</div>
+            <div><label for="{{ form.shirt_price.id_for_label }}">Shirt price (₹)</label>{{ form.shirt_price }}{{ form.shirt_price.errors }}</div>
+            <div><label for="{{ form.pant_qty.id_for_label }}">👖 Pant quantity</label>{{ form.pant_qty }}{{ form.pant_qty.errors }}</div>
+            <div><label for="{{ form.pant_price.id_for_label }}">Pant price (₹)</label>{{ form.pant_price }}{{ form.pant_price.errors }}</div>
+        </div>
+        <p>Total: <span class="total">₹<span id="liveTotal">0</span></span></p>
+
+        <h3>Measurements (inches)</h3>
+        <div class="grid grid-sm">
+            <div><label for="{{ form.chest.id_for_label }}">Chest</label>{{ form.chest }}{{ form.chest.errors }}</div>
+            <div><label for="{{ form.length.id_for_label }}">Length</label>{{ form.length }}{{ form.length.errors }}</div>
+            <div><label for="{{ form.waist.id_for_label }}">Waist</label>{{ form.waist }}{{ form.waist.errors }}</div>
+            <div><label for="{{ form.shoulder.id_for_label }}">Shoulder</label>{{ form.shoulder }}{{ form.shoulder.errors }}</div>
+        </div>
+
+        <h3>Work &amp; Payment</h3>
+        <div class="grid">
+            <div><label for="{{ form.status.id_for_label }}">Status</label>{{ form.status }}{{ form.status.errors }}</div>
+            <div><label for="{{ form.amount_paid.id_for_label }}">Amount paid so far (₹)</label>{{ form.amount_paid }}{{ form.amount_paid.errors }}</div>
+            <div><label for="{{ form.delivery_date.id_for_label }}">Delivery date</label>{{ form.delivery_date }}{{ form.delivery_date.errors }}</div>
+        </div>
+        <label for="{{ form.notes.id_for_label }}">Notes</label>
+        {{ form.notes }}{{ form.notes.errors }}
+
+        <p class="form-actions" style="margin-top:20px;">
+            <button type="submit">Save Order</button>
+            <a class="btn btn-light" href="{% url 'order_list' %}">Cancel</a>
+        </p>
+    </form>
+</div>
+
+<script>
+(function () {
+    function num(id) {
+        var el = document.getElementById(id);
+        var v = el ? parseInt(el.value, 10) : 0;
+        return isNaN(v) || v < 0 ? 0 : v;
+    }
+    function update() {
+        var total = num("id_shirt_qty") * num("id_shirt_price") + num("id_pant_qty") * num("id_pant_price");
+        document.getElementById("liveTotal").textContent = total;
+    }
+    ["id_shirt_qty", "id_shirt_price", "id_pant_qty", "id_pant_price"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("input", update);
+    });
+    update();
+})();
+</script>
+{% endblock %}

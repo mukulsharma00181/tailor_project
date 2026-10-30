@@ -1,0 +1,14 @@
+{% extends "shop/base.html" %}
+{% block title %}Delete Order{% endblock %}
+{% block content %}
+<div class="card" style="max-width:520px;margin:30px auto;">
+    <h2>Delete this order?</h2>
+    <p>Order <b>#{{ object.order_no }}</b> for <b>{{ object.customer_name }}</b>
+       (total ₹{{ object.total }}) will be permanently deleted. This cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Yes, delete</button>
+        <a class="btn btn-light" href="{% url 'order_list' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

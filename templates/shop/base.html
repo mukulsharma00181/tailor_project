@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Owner Panel{% endblock %} | Manoj Sharma Tailor Shop</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, sans-serif; background: #eef3f8; color: #222; }
+a { color: #176b87; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { background: #173b57; color: #fff; padding: 12px 20px; display: flex;
+          flex-wrap: wrap; align-items: center; gap: 14px; justify-content: space-between; }
+.topbar h1 { font-size: 18px; margin: 0; }
+.topbar nav { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.topbar a { color: #fff; }
+.topbar form { margin: 0; }
+
+.container { max-width: 1100px; margin: 22px auto; padding: 0 15px; }
+.card { background: #fff; padding: 22px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 3px 12px #0001; }
+h2 { color: #173b57; margin-top: 0; }
+
+.btn, button { display: inline-block; background: #176b87; color: #fff; padding: 9px 14px; border: none;
+               border-radius: 6px; cursor: pointer; font-size: 14px; text-decoration: none; }
+.btn:hover, button:hover { background: #10475a; text-decoration: none; }
+.btn-light { background: #e3ebf2; color: #173b57; }
+.btn-light:hover { background: #cfdce8; }
+.btn-danger { background: #c0392b; }
+.btn-danger:hover { background: #962d22; }
+.btn-sm { padding: 5px 10px; font-size: 13px; }
+.linklike { background: none; color: #fff; padding: 0; text-decoration: underline; }
+.linklike:hover { background: none; }
+
+label { display: block; margin: 12px 0 6px; font-weight: bold; font-size: 14px; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid #bbb; border-radius: 6px; font-size: 14px; font-family: inherit; }
+.errorlist { color: #c0392b; list-style: none; padding: 0; margin: 4px 0; font-size: 13px; }
+
+.messages { list-style: none; padding: 0; margin: 0 0 15px; }
+.messages li { padding: 12px 16px; border-radius: 8px; background: #dff3e7; color: #13633a; margin-bottom: 8px; }
+.messages li.error { background: #fbe3e0; color: #962d22; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 3px 12px #0001; }
+.stat small { color: #666; display: block; }
+.stat b { font-size: 22px; color: #173b57; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 15px; }
+.toolbar input, .toolbar select { width: auto; min-width: 180px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e5e9ee; white-space: nowrap; }
+th { background: #f4f7fa; color: #173b57; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.mobile-only { display: none; }
+
+.badge { padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+.badge-pending { background: #fdeccd; color: #8a5a00; }
+.badge-stitching { background: #d9e8fb; color: #1a4f94; }
+.badge-ready { background: #e0f3d9; color: #2c6e18; }
+.badge-delivered { background: #e5e5e5; color: #444; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 16px; }
+.grid-sm { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.pagination { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 15px; }
+.muted { color: #666; }
+.total { font-size: 24px; font-weight: bold; color: #13834a; }
+
+/* ---------- Mobile phones ---------- */
+@media (max-width: 700px) {
+    body { font-size: 15px; }
+    .topbar { padding: 10px 14px; }
+    .topbar h1 { font-size: 16px; }
+    .topbar nav { width: 100%; gap: 8px 18px; }
+    .topbar .linklike { padding: 0; font-size: inherit; }
+    .container { margin: 14px auto; padding: 0 10px; }
+    .card { padding: 16px; }
+    h2 { font-size: 20px; }
+
+    /* 16px inputs stop iPhones from zooming in when you tap a field */
+    input, select, textarea { font-size: 16px; padding: 12px; }
+    .btn, button { padding: 12px 16px; font-size: 15px; }
+    .btn-sm { padding: 10px 12px; font-size: 14px; }
+    .topbar .linklike { padding: 0; }
+
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat { padding: 12px; }
+    .stat:last-child:nth-child(odd) { grid-column: span 2; }
+    table.responsive td.hide-mobile { display: none; }
+    .stat b { font-size: 19px; }
+
+    .toolbar input, .toolbar select { width: 100%; min-width: 0; }
+    .toolbar .btn, .toolbar button { flex: 1; text-align: center; }
+    .toolbar .btn[style] { margin-left: 0 !important; flex-basis: 100%; }
+
+    .form-actions .btn, .form-actions button { width: 100%; text-align: center; margin-bottom: 8px; }
+    .mobile-only { display: inline-block; }
+    .btn-block { display: block; width: 100%; text-align: center; margin: 10px 0; }
+
+    /* Orders table turns into one card per order */
+    table.responsive, table.responsive tbody, table.responsive tr, table.responsive td { display: block; width: 100%; }
+    table.responsive thead { display: none; }
+    table.responsive tr { border: 1px solid #dfe5eb; border-radius: 10px; margin-bottom: 12px; padding: 6px 12px; }
+    table.responsive td { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+                          border: 0; padding: 6px 0; white-space: normal; text-align: right; }
+    table.responsive td::before { content: attr(data-label); font-weight: bold; color: #173b57; text-align: left; }
+    table.responsive td.actions-cell { display: block; padding-top: 10px; }
+    table.responsive td.actions-cell::before { display: none; }
+    table.responsive .actions .btn { flex: 1; text-align: center; }
+}
+
+@media print {
+    .topbar, .no-print { display: none !important; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<header class="topbar no-print">
+    <h1>✂ Manoj Sharma Tailor Shop — Owner Panel</h1>
+    <nav>
+        <a href="{% url 'home' %}">Public Page</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'order_list' %}">Orders</a>
+            <a href="{% url 'order_create' %}">+ New Order</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="linklike">Logout ({{ user.username }})</button>
+            </form>
+        {% endif %}
+    </nav>
+</header>
+
+<div class="container">
+    {% if messages %}
+    <ul class="messages no-print">
+        {% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

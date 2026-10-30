@@ -1,0 +1,5 @@
+# Extra packages only needed for hosting (e.g. Render), not for running on your PC
+gunicorn
+dj-database-url
+psycopg2-binary
+whitenoise
